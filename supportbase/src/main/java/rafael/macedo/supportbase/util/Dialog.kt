@@ -2,7 +2,9 @@ package rafael.macedo.supportbase.util
 
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.drawable.ColorDrawable
+import android.support.v7.app.AlertDialog
 import android.view.Window.FEATURE_NO_TITLE
 import rafael.macedo.supportbase.R
 
@@ -22,6 +24,7 @@ class Dialog {
     companion object {
 
         private var loadingDialog:Dialog? = null
+        private var retryDialog:Dialog? = null
 
         fun showLoadingDialog(context: Context) {
             getInstanceLoadingDialog(context)?.show()
@@ -31,6 +34,10 @@ class Dialog {
         fun hideLoadingDialog(context: Context) {
             getInstanceLoadingDialog(context)?.dismiss()
 
+        }
+
+        fun showRetryDialog(context: Context,onRetryListener: OnRetryListener){
+            getInstanceRetryDialog(context,onRetryListener)?.show()
         }
 
         private fun getInstanceLoadingDialog(context: Context):Dialog?{
@@ -48,18 +55,23 @@ class Dialog {
 
         }
 
-        private fun getInstanceRetryDialog(context: Context):Dialog?{
-            if(loadingDialog == null){
-                val dialog = Dialog(context)
-                dialog.requestWindowFeature(FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.custom_dialog_layout)
-                dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-                dialog.setCancelable(false)
-                loadingDialog = dialog
+        private fun getInstanceRetryDialog(context: Context,onRetryListener: OnRetryListener):Dialog?{
+            if(retryDialog == null){
+
+                retryDialog = AlertDialog.Builder(context)
+                        .setTitle(R.string.retry_defaut_title)
+                        .setPositiveButton(R.string.retry_defaut_positive_mensage) { _, _ ->
+                            onRetryListener.onClickRetry()
+                        }
+                        .setNegativeButton(R.string.retry_defaut_negative_mensage) { _, _ ->
+                            onRetryListener.onClickDontRetry()
+                        }
+                        .create()
+
 
             }
 
-            return loadingDialog
+            return retryDialog
 
         }
     }

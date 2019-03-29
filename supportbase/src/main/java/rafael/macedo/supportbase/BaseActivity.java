@@ -3,6 +3,7 @@ package rafael.macedo.supportbase;
 import android.support.v7.app.AppCompatActivity;
 
 import rafael.macedo.supportbase.util.Dialog;
+import rafael.macedo.supportbase.util.OnRetryListener;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -14,7 +15,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void hideLoading(){
         Dialog.Companion.showLoadingDialog(this);
     }
-    protected void showRetryDialog(){
+    protected void showRetryDialog(OnRetryListener onRetryListener){
+        Dialog.Companion.showRetryDialog(this,onRetryListener);
 
     }
 
